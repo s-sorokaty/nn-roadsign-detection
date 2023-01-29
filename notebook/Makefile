@@ -3,3 +3,8 @@ run_notebook:
 
 start:
 	poetry run python main.py
+train:
+	./darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov4-custom.cfg /mnt/HDD/archive/rtsd-frames/yolov4.conv.137 -map
+	
+detect:
+	./darknet detector demo /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov4-custom.cfg yolov4.weights test.mp4
