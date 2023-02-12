@@ -63,7 +63,7 @@ def create_dataset(csv, ds_type):
             with open(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}.txt", 'w') as f:
                 f.write(f"{class_id} {x_center} {y_center} {width} {height}")
             cv2.imwrite(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}.jpg", img)
-            meta_file.write(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}\n")
+            meta_file.write(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}.jpg\n")
 
 create_dataset(train, 'train')
 create_dataset(valid, 'valid')
