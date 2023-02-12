@@ -5,7 +5,17 @@ import numpy as np
 BASE_PATH = '/mnt/HDD/archive'
 
 csv = pandas.read_csv(f'{BASE_PATH}/rtsd-frames/full-gt.csv')
-csv = csv[(csv['sign_class'] == '4_2_1') | (csv['sign_class'] == '1_23')]
+df1 = csv[csv['sign_class'] == '1_23'][50:100]
+print(df1)
+df2 = csv[csv['sign_class'] == '1_17'][50:100] 
+df3 = csv[csv['sign_class'] =='1_12_2'][0:50] 
+df4 = csv[csv['sign_class'] =='1_20'][0:50] 
+df5 = csv[csv['sign_class'] == '5_19_1'][50:100] 
+df6 = csv[csv['sign_class'] == '5_15_3'][0:50] 
+df7 = csv[csv['sign_class'] == '5_21'][0:50] 
+df8 = csv[csv['sign_class'] == '5_15_2'][0:50]
+csv = pandas.concat([df1, df2, df3, df4, df5, df6, df7, df8])
+print(csv['sign_class'].value_counts())
 i = int(len(csv)*0.7)
 train= csv[0:i]
 valid = csv[i:-1] 
