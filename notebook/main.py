@@ -1,24 +1,24 @@
-import os
+import os, uuid
 import pandas 
 import cv2
 import numpy as np
 BASE_PATH = '/mnt/HDD/archive'
 
 csv = pandas.read_csv(f'{BASE_PATH}/rtsd-frames/full-gt.csv')
-print(csv['sign_class'].unique())
+print(csv['sign_class'].value_counts())
 
-class_mean_length = 100
-df2 = csv[(csv['sign_class'] == '1_17') & (csv['width'] >= 16) & (csv['height'] >= 16)][50:150] 
-df1 = csv[(csv['sign_class'] == '1_23') & (csv['width'] >= 16) & (csv['height'] >= 16)][50:150]
-df4 = csv[(csv['sign_class'] =='1_20_3') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df3 = csv[(csv['sign_class'] =='1_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df5 = csv[(csv['sign_class'] =='1_20_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
+class_mean_length = 1000
+df2 = csv[(csv['sign_class'] == '1_17') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df1 = csv[(csv['sign_class'] == '2_4') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000]
+df4 = pandas.DataFrame([]) # csv[(csv['sign_class'] =='1_20_3') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df3 = pandas.DataFrame([]) # csv[(csv['sign_class'] =='1_2') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df5 = csv[(csv['sign_class'] =='2_1') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
 
-df6 = csv[(csv['sign_class'] == '5_19_1') & (csv['width'] >= 16) & (csv['height'] >= 16)][50:150] 
-df7 = csv[(csv['sign_class'] == '5_15_3') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df8 = csv[(csv['sign_class'] == '5_7_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df9 = csv[(csv['sign_class'] == '5_15_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100]
-df10 = csv[(csv['sign_class'] == '5_15_7') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100]
+df6 = csv[(csv['sign_class'] == '5_19_1') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df7 = csv[(csv['sign_class'] == '5_15_3') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df8 = pandas.DataFrame([]) #  csv[(csv['sign_class'] == '5_7_2') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df9 = csv[(csv['sign_class'] == '5_15_2') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000]
+df10 = pandas.DataFrame([]) # csv[(csv['sign_class'] == '5_15_7') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000]
 
 
 
@@ -40,8 +40,9 @@ classes = np.loadtxt(f'{BASE_PATH}/rtsd-frames/obj.names', dtype='str')
 
 def create_dataset(csv, ds_type):
     os.system(f"rm {BASE_PATH}/rtsd-frames/{ds_type}/*")
-    with open(f"{BASE_PATH}/rtsd-frames/{ds_type}/{ds_type}.txt", 'w') as train_file:
+    with open(f"{BASE_PATH}/rtsd-frames/{ds_type}/{ds_type}.txt", 'w') as meta_file:
         for row in csv.iterrows():
+            item_id = uuid.uuid4()
             img = cv2.imread(f"{BASE_PATH}/rtsd-frames/rtsd-frames/{row[1]['filename']}")
 
 
@@ -59,10 +60,10 @@ def create_dataset(csv, ds_type):
             y_center = (row[1]['y_from'] + row[1]['height']/2)/img.shape[0]
             width = row[1]['width']/img.shape[1]
             height = row[1]['height']/img.shape[0]
-            with open(f"{BASE_PATH}/rtsd-frames/{ds_type}/{row[1]['filename'].split('.')[0]}.txt", 'w') as f:
+            with open(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}.txt", 'w') as f:
                 f.write(f"{class_id} {x_center} {y_center} {width} {height}")
-            cv2.imwrite(f"{BASE_PATH}/rtsd-frames/{ds_type}/{row[1]['filename']}", img)
-            train_file.write(f"{BASE_PATH}/rtsd-frames/{ds_type}/{row[1]['filename']}\n")
+            cv2.imwrite(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}.jpg", img)
+            meta_file.write(f"{BASE_PATH}/rtsd-frames/{ds_type}/{str(item_id)}\n")
 
 create_dataset(train, 'train')
 create_dataset(valid, 'valid')
