@@ -4,7 +4,7 @@ run_notebook:
 start:
 	poetry run python main.py
 train:
-	./darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov4-custom.cfg /mnt/HDD/archive/rtsd-frames/yolov4.conv.137 -map
+	./darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov4-custom.cfg /mnt/HDD/archive/rtsd-frames/yolov4.conv.137 -map -show_imgs
 
 train_v7:
 	./darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg -map #/mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_last.weights 
