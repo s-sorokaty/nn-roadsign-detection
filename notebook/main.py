@@ -7,24 +7,23 @@ BASE_PATH = '/mnt/HDD/archive'
 csv = pandas.read_csv(f'{BASE_PATH}/rtsd-frames/full-gt.csv')
 print(csv['sign_class'].value_counts())
 
-class_mean_length = 100
-df2 = csv[(csv['sign_class'] == '1_17') & (csv['width'] >= 16) & (csv['height'] >= 16)][50:150] 
-df1 = csv[(csv['sign_class'] == '1_23') & (csv['width'] >= 16) & (csv['height'] >= 16)][50:150]
-df4 = csv[(csv['sign_class'] =='1_20_3') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df3 = csv[(csv['sign_class'] =='1_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df5 = csv[(csv['sign_class'] =='1_20_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
+class_mean_length = 1000
+df2 = csv[(csv['sign_class'] == '1_17') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df1 = csv[(csv['sign_class'] == '2_4') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000]
+df4 = pandas.DataFrame([]) # csv[(csv['sign_class'] =='1_20_3') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df3 = pandas.DataFrame([]) # csv[(csv['sign_class'] =='1_2') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df5 = csv[(csv['sign_class'] =='2_1') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
 
-df6 = csv[(csv['sign_class'] == '5_19_1') & (csv['width'] >= 16) & (csv['height'] >= 16)][50:150] 
-df7 = csv[(csv['sign_class'] == '5_15_3') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df8 = csv[(csv['sign_class'] == '5_7_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100] 
-df9 = csv[(csv['sign_class'] == '5_15_2') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100]
-df10 = csv[(csv['sign_class'] == '5_15_7') & (csv['width'] >= 16) & (csv['height'] >= 16)][0:100]
-
+df6 = csv[(csv['sign_class'] == '5_19_1') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df7 = csv[(csv['sign_class'] == '5_15_3') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df8 = pandas.DataFrame([]) #  csv[(csv['sign_class'] == '5_7_2') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000] 
+df9 = csv[(csv['sign_class'] == '5_15_2') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000]
+df10 = pandas.DataFrame([]) # csv[(csv['sign_class'] == '5_15_7') & (csv['width'] >= 17) & (csv['height'] >= 17)][0:1000]
 
 csv = pandas.concat([df1, df2, df3, df4, df5, df6, df7, df8, df9, df10])
 
 i = int(class_mean_length*0.8)
-print(' HERE ',df1[i:-1]['sign_class'].value_counts())
+#print(' HERE ',df1[i:-1]['sign_class'].value_counts())
 
 train = pandas.concat([df1[0:i], df2[0:i], df3[0:i], df4[0:i], df5[0:i], df6[0:i], df7[0:i], df8[0:i], df9[0:i], df10[0:i]])
 valid = pandas.concat([df1[i:-1], df2[i:-1], df3[i:-1], df4[i:-1], df5[i:-1], df6[i:-1], df7[i:-1], df8[i:-1], df9[i:-1], df10[i:-1]])
