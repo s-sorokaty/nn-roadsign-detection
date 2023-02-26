@@ -162,9 +162,9 @@ def inference(darknet_image_queue, detections_queue, fps_queue):
     cap.release()
 
 
-def drawing(frame_queue, detections_queue, fps_queue):
+def drawing(frame_queue, detections_queue, fps_queue, saving_video_name):
     random.seed(3)  # deterministic bbox colors
-    video = set_saved_video(cap, args.out_filename, (video_width, video_height))
+    video = set_saved_video(cap, saving_video_name, (video_width, video_height))
     while cap.isOpened():
         frame = frame_queue.get()
         detections = detections_queue.get()
@@ -175,12 +175,12 @@ def drawing(frame_queue, detections_queue, fps_queue):
                 bbox_adjusted = convert2original(frame, bbox)
                 detections_adjusted.append((str(label), confidence, bbox_adjusted))
             image = darknet.draw_boxes(detections_adjusted, frame, class_colors)
-            if not args.dont_show:
-                cv2.imshow('Inference', image)
-            if args.out_filename is not None:
+            #if not args.dont_show:
+            #    cv2.imshow('Inference', image)
+            if saving_video_name is not None:
                 video.write(image)
-            if cv2.waitKey(fps) == 27:
-                break
+            #if cv2.waitKey(fps) == 27:
+            #    break
     cap.release()
     video.release()
     cv2.destroyAllWindows()
@@ -217,7 +217,7 @@ def detect_on_frame(frame):
     #    return new_frame
     
     
-def detect_on_video():
+def detect_on_video(saving_video_name:str = None):
     global cap,args
     global darknet_width,darknet_height
     global video_width,video_height
@@ -228,4 +228,4 @@ def detect_on_video():
     video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
     Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
-    Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue)).start()
+    Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue, saving_video_name)).start()
