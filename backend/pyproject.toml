@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 opencv-python = "^4.7.0.68"
+fastapi = "^0.92.0"
+uvicorn = "^0.20.0"
+python-multipart = "^0.0.5"
 
 
 [build-system]
