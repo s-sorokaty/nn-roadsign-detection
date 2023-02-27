@@ -8,6 +8,11 @@ import uvicorn
 ROW_DATA_PATH='raw_data'
 PREDICTION_DATA_PATH='prediction'
 
+try: os.mkdir(ROW_DATA_PATH)
+except: pass
+try: os.mkdir(PREDICTION_DATA_PATH)
+except: pass
+
 app = FastAPI()
 
 @app.post("/image_detection/{filename}")
