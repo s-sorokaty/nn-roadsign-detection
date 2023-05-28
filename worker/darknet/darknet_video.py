@@ -8,10 +8,10 @@ import argparse
 from threading import Thread, enumerate
 from queue import Queue
 
-CONFIG_FILE='/mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg'
-OBJ_FILE='/mnt/HDD/archive/rtsd-frames/obj.data'
-WEIGHTS_FILE='/mnt/HDD/archive/rtsd-frames/weights/yolov7-darknet_84_4classes.weights'
-INPUT_FILE='/mnt/HDD/archive/rtsd-frames/test.mp4'
+CONFIG_FILE='yolov7-darknet.cfg'
+OBJ_FILE='obj.data'
+WEIGHTS_FILE='yolov7-darknet_best.weights'
+INPUT_FILE='test.mp4'
 
 def parser():
     parser = argparse.ArgumentParser(description="YOLO Object Detection")

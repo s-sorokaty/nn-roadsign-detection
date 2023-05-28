@@ -217,13 +217,13 @@ def detect_on_frame(frame):
     #    return new_frame
     
     
-def detect_on_video(saving_video_name:str = None):
+def detect_on_video(input_video:str, saving_video_name:str = None):
     global cap,args
     global darknet_width,darknet_height
     global video_width,video_height
     global network, class_names, class_colors
     input_path = str2int(args.input)
-    cap = cv2.VideoCapture(input_path)
+    cap = cv2.VideoCapture(input_video)
     video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
