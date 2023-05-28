@@ -54,7 +54,7 @@ async def root(video_file: UploadFile,filename: str):
     with open(f"{ROW_DATA_PATH}/{filename}.mp4", "wb") as buffer:
             contents = await video_file.read()
             buffer.write(contents)
-    darknet_video.detect_on_video(f"{ROW_DATA_PATH}/{filename}.mp4", f'{PREDICTION_DATA_PATH}/{filename}.mp4')
+    darknet_video.video_prediction(f"{ROW_DATA_PATH}/{filename}.mp4", f'{PREDICTION_DATA_PATH}/{filename}.mp4')
     return 'OK'
 
 @app.get("/video_detection/{filename}")

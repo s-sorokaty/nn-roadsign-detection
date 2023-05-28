@@ -229,3 +229,36 @@ def detect_on_video(saving_video_name:str = None):
     Thread(target=video_capture, args=(frame_queue, darknet_image_queue)).start()
     Thread(target=inference, args=(darknet_image_queue, detections_queue, fps_queue)).start()
     Thread(target=drawing, args=(frame_queue, detections_queue, fps_queue, saving_video_name)).start()
+
+
+def video_prediction(input_video:str, out_video:str):
+    cap = cv2.VideoCapture(input_video)
+    width  = cap.get(cv2.CAP_PROP_FRAME_WIDTH)   
+    height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    print(width, height, fps)
+    #fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+    out = cv2.VideoWriter('filename.avi',  cv2.VideoWriter_fourcc(*'MJPG'), float(fps),(int(width), int(height)), True)
+    print(out_video)
+    while(True):
+      ret, frame = cap.read()
+    
+      if ret == True: 
+        new_frame, detections = detect_on_frame(frame)
+        # Write the frame into the file 'output.avi
+        new_frame = cv2.resize(new_frame, (frame.shape[1], frame.shape[0]))
+        out.write(new_frame)
+    
+        # Press Q on keyboard to stop recording
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+          break
+      
+      # Break the loop
+      else:
+        break 
+    
+    # When everything done, release the video capture and video write objects
+    cap.release()
+    out.release()
+    
+    # Closes all the frames
