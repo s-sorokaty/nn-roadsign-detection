@@ -5,14 +5,15 @@ start:
 	poetry run python main.py
 
 train:
-	./darknet/darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov4-custom.cfg /mnt/HDD/archive/rtsd-frames/yolov4.conv.137 -map -show_imgs
-
+	./darknet/darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov4-custom.cfg /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg -map -show_imgs 
+	./darknet/darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg -map -dont_show
 train_v7:
 	./darknet/darknet detector train /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg -map #/mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_last.weights 
 
 detect:
-	./darknet/darknet detector demo /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg /mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_best.weights darknet/test.mp4
+	./darknet/darknet detector demo /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg /mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_best.weights darknet/test.mp4 -thresh .1
 
 test:
-	#./darknet/darknet detector test /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg /mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_best.weights darknet/test.jpg
-	./darknet/darknet detector test /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg /mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_best.weights darknet/test2.jpg
+	./darknet detector test /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg /mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_best.weights test.jpg -thresh .2
+show_metrics:
+	./darknet detector map /mnt/HDD/archive/rtsd-frames/obj.data /mnt/HDD/archive/rtsd-frames/yolov7-darknet.cfg /mnt/HDD/archive/rtsd-frames/backup/yolov7-darknet_best.weights

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["s-sorokaty <sorokaty0824@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+opencv-python = "^4.7.0.68"
+fastapi = "^0.92.0"
+uvicorn = "^0.20.0"
+python-multipart = "^0.0.5"
+jinja2 = "^3.1.2"
+aiortc = "^1.4.0"
+pydantic = "^1.10.5"
+cffi = "^1.15.1"
+xcffib = "^1.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
