@@ -5,7 +5,7 @@ from fastapi import FastAPI, UploadFile, responses, Request
 import uvicorn
 import logging
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import JSONResponse
+from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
 
@@ -29,6 +29,10 @@ pcs = set()
 logger = logging.getLogger("pc")
 ROOT = os.path.dirname(__file__)
 
+allow_origin = ["*"]
+app.add_middleware(
+    CORSMiddleware, allow_origins=allow_origin, allow_headers=["*"], allow_methods=["*"]
+)
 
 @app.post("/image_detection/{filename}")
 async def root(image_file: UploadFile, filename:str):
@@ -50,6 +54,14 @@ async def root(image_file: UploadFile, filename:str):
 async def root(filename: str):
     return responses.FileResponse(f'{PREDICTION_DATA_PATH}/{filename}.jpg')
 
+@app.get("/list/image_detection/")
+async def root():
+    return [image.split('.')[0] for image in os.listdir(f'{PREDICTION_DATA_PATH}/') if image.split('.')[1] =='jpg' or image.split('.')[1] =='jpeg' or image.split('.')[1] == 'png']
+
+@app.delete("/image_detection/{filename}")
+async def root(filename:str):
+    return os.remove(f'{PREDICTION_DATA_PATH}/{filename}.jpg')
+                     
 @app.post("/video_detection/{filename}")
 async def root(video_file: UploadFile,filename: str):
     with open(f"{ROW_DATA_PATH}/{filename}.mp4", "wb") as buffer:
@@ -61,6 +73,10 @@ async def root(video_file: UploadFile,filename: str):
 @app.get("/video_detection/{filename}")
 def get_video(filename: str):
     return FileResponse(f'{PREDICTION_DATA_PATH}/{filename}.mp4', media_type='application/octet-stream',filename=f'{PREDICTION_DATA_PATH}/{filename}.mp4')
+
+@app.get("/list/video_detection/")
+async def root():
+    return [image.split('.')[0] for image in os.listdir(f'{PREDICTION_DATA_PATH}/') if image.split('.')[1] =='mp4']
 
 @app.get("/readtime_prediction", response_class = responses.RedirectResponse, status_code=302)
 def root():

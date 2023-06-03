@@ -14,7 +14,7 @@ import {DeleteIcon} from "@chakra-ui/icons"
 import React, { useState, useRef, useEffect } from "react";
 import api from "api/api";
 
-export default function PhotoPrediction() {
+export default function VideoPrediction() {
   const iconBoxInside = useColorModeValue("white", "white");
   const [selectedFile, setSelectedFile] = useState("");
   const [predictedImages, setPredictedImages] = useState([]);
@@ -27,13 +27,13 @@ export default function PhotoPrediction() {
 
   const apiRequest = (e) => {
     const formData = new FormData();
-    formData.append("image_file", selectedFile);
-    api.image
+    formData.append("video_file", selectedFile);
+    api.video
       .predict(selectedFile.name.split(".")[0], formData)
       .then((res) => {
         console.log(res.data);
         imageRef.current.src = `http://localhost:8000/image_detection/${selectedFile.name.split(".")[0]}`;
-        api.image.list_images().then((res) => {
+        api.video.list_videos().then((res) => {
           setPredictedImages(res.data);
         });
       })
@@ -41,14 +41,14 @@ export default function PhotoPrediction() {
   };
 
   useEffect(() => {
-    api.image.list_images().then((res) => {
+    api.video.list_videos().then((res) => {
       setPredictedImages(res.data);
     });
   }, []);
 
   const handleDeleteImage = (item) => {
-    api.image.delete(item).then(() => {
-      api.image.list_images().then((res) => {
+    api.video.delete(item).then(() => {
+      api.video.list_videos().then((res) => {
         setPredictedImages(res.data);
       });
     });
@@ -63,8 +63,8 @@ export default function PhotoPrediction() {
       height="100vh" // Добавлено свойство height
     >
       <FormControl width="20%">
-        <FormLabel>Select an image for prediction</FormLabel>
-        <Input onChange={fileChangeHandler} type="file" accept=".jpeg, .jpg, .png" />
+        <FormLabel>Select an videofile for prediction</FormLabel>
+        <Input onChange={fileChangeHandler} type="file" accept=".mp4, .webm" />
         <Button onClick={apiRequest} mt={4} colorScheme="teal">
           Get prediction
         </Button>

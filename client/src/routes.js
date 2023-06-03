@@ -1,16 +1,11 @@
-// import
 import PhotoPrediction from "views/Dashboard/PhotoPrediction";
-import Tables from "views/Dashboard/Tables";
-import Billing from "views/Dashboard/Billing";
+import VideoPrediction from "views/Dashboard/VideoPrediction";
+import RealtimePrediction from "views/Dashboard/RealtimePrediction";
 
 import {
   HomeIcon,
   StatsIcon,
   CreditIcon,
-  PersonIcon,
-  DocumentIcon,
-  RocketIcon,
-  SupportIcon,
 } from "components/Icons/Icons";
 
 var dashRoutes = [
@@ -25,14 +20,14 @@ var dashRoutes = [
     path: "/video-prediction",
     name: "Video prediction",
     icon: <StatsIcon color="inherit" />,
-    component: Tables,
+    component: VideoPrediction,
     layout: "/admin",
   },
   {
     path: "/realtime-prediction",
     name: "Realtime prediction",
     icon: <CreditIcon color="inherit" />,
-    component: Billing,
+    component: RealtimePrediction,
     layout: "/admin",
   },
 ];
