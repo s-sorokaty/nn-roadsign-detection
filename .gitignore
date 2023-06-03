@@ -4,3 +4,4 @@ __pycache__
 volumes
 .vscode
 .ipynb_checkpoints
+darknet

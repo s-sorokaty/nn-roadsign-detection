@@ -1,5 +1,5 @@
 // import
-import Dashboard from "views/Dashboard/Dashboard";
+import PhotoPrediction from "views/Dashboard/PhotoPrediction";
 import Tables from "views/Dashboard/Tables";
 import Billing from "views/Dashboard/Billing";
 
@@ -18,7 +18,7 @@ var dashRoutes = [
     path: "/photo-prediction",
     name: "Photo prediction",
     icon: <HomeIcon color="inherit" />,
-    component: Dashboard,
+    component: PhotoPrediction,
     layout: "/admin",
   },
   {

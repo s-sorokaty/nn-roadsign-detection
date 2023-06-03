@@ -2,7 +2,7 @@ start:
 	poetry run python main.py
 
 build_container:
-	docker build . --tag darknet_server
+	docker build --no-cache . --tag darknet_server
 
 server_in_docker:
 	docker run --runtime=nvidia --rm -v ${PWD}:/workspace -v ${PWD}/../darknet:/workspace/darknet -p 8000:8000 darknet_server poetry run python main.py
