@@ -155,8 +155,10 @@ function start() {
             resolution = resolution.split('x');
             constraints.video = {
                 width: parseInt(resolution[0], 0),
-                height: parseInt(resolution[1], 0)
+                height: parseInt(resolution[1], 0),
+                frameRate: 15
             };
+            console.log(constraints)
         } else {
             constraints.video = true;
         }

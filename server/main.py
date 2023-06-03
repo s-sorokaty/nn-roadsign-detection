@@ -5,9 +5,10 @@ from fastapi import FastAPI, UploadFile, responses, Request
 import uvicorn
 import logging
 from fastapi.templating import Jinja2Templates
-
-from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from fastapi.responses import FileResponse
+
 class Offer_model(BaseModel):
     sdp:object
     type:object
@@ -58,10 +59,12 @@ async def root(video_file: UploadFile,filename: str):
     return 'OK'
 
 @app.get("/video_detection/{filename}")
-def root(filename: str):
-    return FileResponse(f'{PREDICTION_DATA_PATH}/{filename}.mp4', media_type='application/octet-stream', filename='{filename}.mp4')
+def get_video(filename: str):
+    return FileResponse(f'{PREDICTION_DATA_PATH}/{filename}.mp4', media_type='application/octet-stream',filename=f'{PREDICTION_DATA_PATH}/{filename}.mp4')
 
-
+@app.get("/readtime_prediction", response_class = responses.RedirectResponse, status_code=302)
+def root():
+    return 'http://localhost:8080/'
 
 if __name__=="__main__":
     uvicorn.run("main:app",host='0.0.0.0', port=8000, reload=True)

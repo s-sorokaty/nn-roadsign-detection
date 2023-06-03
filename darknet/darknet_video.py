@@ -238,7 +238,7 @@ def video_prediction(input_video:str, out_video:str):
     fps = cap.get(cv2.CAP_PROP_FPS)
     print(width, height, fps)
     #fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-    out = cv2.VideoWriter('filename.avi',  cv2.VideoWriter_fourcc(*'MJPG'), float(fps),(int(width), int(height)), True)
+    out = cv2.VideoWriter(out_video,  cv2.VideoWriter_fourcc(*'MJPG'), float(fps),(int(width), int(height)), True)
     print(out_video)
     while(True):
       ret, frame = cap.read()
