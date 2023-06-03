@@ -9,6 +9,7 @@ import {
   Box,
   UnorderedList,
   ListItem,
+  Video
 } from "@chakra-ui/react";
 import {DeleteIcon} from "@chakra-ui/icons"
 import React, { useState, useRef, useEffect } from "react";
@@ -19,7 +20,7 @@ export default function VideoPrediction() {
   const [selectedFile, setSelectedFile] = useState("");
   const [predictedImages, setPredictedImages] = useState([]);
 
-  const imageRef = useRef();
+  const videoRef = useRef();
 
   const fileChangeHandler = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -32,7 +33,7 @@ export default function VideoPrediction() {
       .predict(selectedFile.name.split(".")[0], formData)
       .then((res) => {
         console.log(res.data);
-        imageRef.current.src = `http://localhost:8000/image_detection/${selectedFile.name.split(".")[0]}`;
+        videoRef.current.src = `http://localhost:8000/video_stream/${selectedFile.name.split(".")[0]}`;
         api.video.list_videos().then((res) => {
           setPredictedImages(res.data);
         });
@@ -71,13 +72,15 @@ export default function VideoPrediction() {
       </FormControl>
       <Flex mt={8} alignItems="center">
         <Box>
-          <FormLabel>Predicted Image</FormLabel>
-          <Image
+          <FormLabel>Predicted Video</FormLabel>
+          <Box
+            as='video'
+            controls
             style={{ clear: "both" }}
             width="100%"
-            ref={imageRef}
+            ref={videoRef}
             src=""
-            alt="Predicted Image"
+            alt="Predicted Video"
             fallbackSrc="https://via.placeholder.com/500"
           />
         </Box>
@@ -88,11 +91,12 @@ export default function VideoPrediction() {
           <UnorderedList>
             {predictedImages.map((item) => (
               <ListItem key={item} display="flex" alignItems="center">
-                <Image
+                <Box
+                  as='video'
                   onClick={() => {
-                    imageRef.current.src = `http://localhost:8000/image_detection/${item}`;
+                    videoRef.current.src = `http://localhost:8000/video_stream/${item}`;
                   }}
-                  src={`http://localhost:8000/image_detection/${item}`}
+                  src={`http://localhost:8000/video_stream/${item}`}
                   boxSize="50px"
                   objectFit="cover"
                   borderRadius="md"
