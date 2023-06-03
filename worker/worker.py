@@ -37,6 +37,7 @@ class VideoTransformTrack(MediaStreamTrack):
     async def recv(self):
         frame = await self.track.recv()
         img = frame.to_ndarray(format="bgr24")
+        print(img.shape)
         shape = img.shape
         img = self.detector(img)
         img = cv2.resize(img[0], (shape[1], shape[0]), interpolation= cv2.INTER_LINEAR)
