@@ -1,115 +1,160 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebRTC demo</title>
     <style>
-    button {
-        padding: 8px 16px;
-    }
+        /* Общие стили Chakra UI */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto", sans-serif;
+        }
 
-    pre {
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
+        h2 {
+            font-size: 1.4rem; /* Увеличиваем размер текста */
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
 
-    video {
-        width: 100%;
-    }
+        .option {
+            margin-bottom: 1rem;
+        }
 
-    .option {
-        margin-bottom: 8px;
-    }
+        label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 1 rem; /* Увеличиваем размер текста */
+        }
 
-    #media {
-        max-width: 1280px;
-    }
+        input[type="checkbox"],
+        select,
+        input[type="button"] {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem; /* Увеличиваем размер текста */
+        }
+
+        button {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            background-color: rgb(0, 160, 160); /* Изменяем цвет кнопки на Teal */
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem; /* Увеличиваем размер текста */
+        }
+
+        #media {
+            max-width: 1280px;
+        }
+
+        pre {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        video {
+            width: 100%;
+        }
+
+        select {
+            background-color: transparent; /* Делаем селектор прозрачным */
+        }
     </style>
 </head>
 <body>
+    <h2>Настройка видео</h2>
+    <div class="option" hidden>
+        <input id="use-datachannel" checked="checked" type="checkbox"/>
+        <label for="use-datachannel">Use datachannel</label>
+        <select id="datachannel-parameters">
+            <option value='{"ordered": true}'>Ordered, reliable</option>
+            <option value='{"ordered": false, "maxRetransmits": 0}'>Unordered, no retransmissions</option>
+            <option value='{"ordered": false, "maxPacketLifetime": 500}'>Unordered, 500ms lifetime</option>
+        </select>
+    </div>
+    <div class="option" hidden>
+        <input id="use-audio" type="checkbox"/>
+        <label for="use-audio">Use audio</label>
+        <select id="audio-codec">
+            <option value="default" selected>Default codecs</option>
+            <option value="opus/48000/2">Opus</option>
+            <option value="PCMU/8000">PCMU</option>
+            <option value="PCMA/8000">PCMA</option>
+        </select>
+    </div>
+    <div class="option" hidden>
+        <input id="use-video" checked="checked" type="checkbox" hidden/>
+        <label hidden for="use-video">Настройка видео</label>
+    </div>
+    <div>
+        <label for="use-video">Разрешение видео</label>
+        <select id="video-resolution">
+            <option value="640x480">640x480</option>
+            <option value="1280x720" selected>1280x720</option>
+            <option value="1920x1080">1920x1080</option>
+        </select>
+        <select hidden id="video-transform">
+            <option value="none" selected>No transform</option>
+            <option value="edges">Edge detection</option>
+            <option value="cartoon">Cartoon effect</option>
+            <option value="rotate">Rotate</option>
+        </select>
+        <select hidden id="video-codec">
+            <option value="default" selected>Default codecs</option>
+            <option value="VP8/90000">VP8</option>
+            <option value="H264/90000">H264</option>
+        </select>
+    </div>
+    <div>
+        <label for="use-video">Количество кадров в секунду</label>
+        <select id="frame-rate">
+            <option value="640x480">15</option>
+            <option value="1280x720">20</option>
+            <option value="1920x1080">25</option>
+            <option value="1920x1080" selected>30</option>
+        </select>
+    </div>
+    <div class="option" hidden>
+        <input id="use-stun" type="checkbox"/>
+        <label for="use-stun">Use STUN server</label>
+    </div>
 
-<h2>Options</h2>
-<div class="option">
-    <input id="use-datachannel" checked="checked" type="checkbox"/>
-    <label for="use-datachannel">Use datachannel</label>
-    <select id="datachannel-parameters">
-        <option value='{"ordered": true}'>Ordered, reliable</option>
-        <option value='{"ordered": false, "maxRetransmits": 0}'>Unordered, no retransmissions</option>
-        <option value='{"ordered": false, "maxPacketLifetime": 500}'>Unordered, 500ms lifetime</option>
-    </select>
-</div>
-<div class="option">
-    <input id="use-audio" checked="checked" type="checkbox"/>
-    <label for="use-audio">Use audio</label>
-    <select id="audio-codec">
-        <option value="default" selected>Default codecs</option>
-        <option value="opus/48000/2">Opus</option>
-        <option value="PCMU/8000">PCMU</option>
-        <option value="PCMA/8000">PCMA</option>
-    </select>
-</div>
-<div class="option">
-    <input id="use-video" type="checkbox"/>
-    <label for="use-video">Use video</label>
-    <select id="video-resolution">
-        <option value="" selected>Default resolution</option>
-        <option value="320x240">320x240</option>
-        <option value="640x480">640x480</option>
-        <option value="960x540">960x540</option>
-        <option value="1280x720">1280x720</option>
-        <option value="1920x1080">1920x1080</option>
-        <option value="8000x4000">8000x4000</option>
+    <button id="start" onclick="start()">Старт</button>
+    <button id="stop" style="display: none" onclick="stop()">Стоп</button>
 
-    </select>
-    <select id="video-transform">
-        <option value="none" selected>No transform</option>
-        <option value="edges">Edge detection</option>
-        <option value="cartoon">Cartoon effect</option>
-        <option value="rotate">Rotate</option>
-    </select>
-    <select id="video-codec">
-        <option value="default" selected>Default codecs</option>
-        <option value="VP8/90000">VP8</option>
-        <option value="H264/90000">H264</option>
-    </select>
-</div>
-<div class="option">
-    <input id="use-stun" type="checkbox"/>
-    <label for="use-stun">Use STUN server</label>
-</div>
+    <h2 hidden>State</h2>
+    <p hidden>
+        ICE gathering state: <span id="ice-gathering-state"></span>
+    </p>
+    <p hidden>
+        ICE connection state: <span id="ice-connection-state"></span>
+    </p>
+    <p hidden>
+        Signaling state: <span id="signaling-state"></span>
+    </p>
 
-<button id="start" onclick="start()">Start</button>
-<button id="stop" style="display: none" onclick="stop()">Stop</button>
+    <div id="media" style="display: none">
+        <h2>Обработанное видео</h2>
+        <audio id="audio" autoplay="true"></audio>
+        <video id="video" autoplay="true" playsinline="true"></video>
+    </div>
 
-<h2>State</h2>
-<p>
-    ICE gathering state: <span id="ice-gathering-state"></span>
-</p>
-<p>
-    ICE connection state: <span id="ice-connection-state"></span>
-</p>
-<p>
-    Signaling state: <span id="signaling-state"></span>
-</p>
+    <h2 hidden>Data channel</h2>
+    <pre hidden id="data-channel" style="height: 200px;"></pre>
 
-<div id="media" style="display: none">
-    <h2>Media</h2>
+    <h2 hidden>SDP</h2>
 
-    <audio id="audio" autoplay="true"></audio>
-    <video id="video" autoplay="true" playsinline="true"></video>
-</div>
+    <h3 hidden>Offer</h3>
+    <pre hidden id="offer-sdp"></pre>
 
-<h2>Data channel</h2>
-<pre id="data-channel" style="height: 200px;"></pre>
+    <h3 hidden>Answer</h3>
+    <pre hidden id="answer-sdp"></pre>
 
-<h2>SDP</h2>
-
-<h3>Offer</h3>
-<pre id="offer-sdp"></pre>
-
-<h3>Answer</h3>
-<pre id="answer-sdp"></pre>
-
-<script src="client.js"></script>
+    <script src="client.js"></script>
 </body>
 </html>

@@ -81,7 +81,7 @@ export default function PhotoPrediction() {
               <option value="option3">640x480</option>
             </Select>
             <Button onClick={apiRequest} mt={4} colorScheme="teal">
-              Загрузить
+              Загрузить фотографию
             </Button>
           </FormControl>
         </Flex>
@@ -149,7 +149,7 @@ export default function PhotoPrediction() {
                   size="sm"
                   ml={2}
                 >
-                  Открыть
+                  Просмотр
                 </Button>
                 <Button
                   onClick={() => {
@@ -161,7 +161,7 @@ export default function PhotoPrediction() {
                   size="sm"
                   ml={2}
                 >
-                  Delete
+                  Удалить
                 </Button>
               </ListItem>
             ))}

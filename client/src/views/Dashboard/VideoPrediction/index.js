@@ -9,16 +9,21 @@ import {
   Box,
   UnorderedList,
   ListItem,
-  Video
+  Video,
+  InputGroup,
+  InputRightElement,
+  CloseButton,
+  Select
 } from "@chakra-ui/react";
-import {DeleteIcon} from "@chakra-ui/icons"
+import { DeleteIcon, SearchIcon,ViewIcon } from "@chakra-ui/icons";
 import React, { useState, useRef, useEffect } from "react";
 import api from "api/api";
 
 export default function VideoPrediction() {
   const iconBoxInside = useColorModeValue("white", "white");
   const [selectedFile, setSelectedFile] = useState("");
-  const [predictedImages, setPredictedImages] = useState([]);
+  const [predictedVideos, setPredictedVideos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const videoRef = useRef();
 
@@ -35,7 +40,7 @@ export default function VideoPrediction() {
         console.log(res.data);
         videoRef.current.src = `http://localhost:8000/video_stream/${selectedFile.name.split(".")[0]}`;
         api.video.list_videos().then((res) => {
-          setPredictedImages(res.data);
+          setPredictedVideos(res.data);
         });
       })
       .catch((e) => console.log(e));
@@ -43,38 +48,54 @@ export default function VideoPrediction() {
 
   useEffect(() => {
     api.video.list_videos().then((res) => {
-      setPredictedImages(res.data);
+      setPredictedVideos(res.data);
     });
   }, []);
 
-  const handleDeleteImage = (item) => {
+  const handleDeleteVideo = (item) => {
     api.video.delete(item).then(() => {
       api.video.list_videos().then((res) => {
-        setPredictedImages(res.data);
+        setPredictedVideos(res.data);
       });
     });
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredVideos = predictedVideos.filter((item) =>
+    item.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Flex
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      pt={{ base: "120px", md: "75px" }}
-      height="100vh" // Добавлено свойство height
-    >
-      <FormControl width="20%">
-        <FormLabel>Select an videofile for prediction</FormLabel>
-        <Input onChange={fileChangeHandler} type="file" accept=".mp4, .webm" />
-        <Button onClick={apiRequest} mt={4} colorScheme="teal">
-          Get prediction
-        </Button>
-      </FormControl>
-      <Flex mt={8} alignItems="center">
-        <Box>
-          <FormLabel>Predicted Video</FormLabel>
+    <Flex alignItems="stretch" justifyContent="center"  paddingTop="100">
+      <Box width="70%">
+        <FormControl width="40%" alignItems="center">
+          <FormLabel textAlign="left">Видео для предсказания</FormLabel>
+          <Input onChange={fileChangeHandler} type="file" accept=".mp4, .webm" />
+          <FormLabel>Разрешение видео</FormLabel>
+            <Select>
+              <option value="option1">1280x720</option>
+              <option value="option2">1920x1080</option>
+              <option value="option3">640x480</option>
+            </Select>
+          <FormLabel>Колличество кадров в секунду</FormLabel>
+            <Select>
+              <option value="option1">30</option>
+              <option value="option5">10</option>
+              <option value="option2">15</option>
+              <option value="option3">20</option>
+              <option value="option4">25</option>
+          </Select>
+          <Button onClick={apiRequest} mt={4} colorScheme="teal">
+            Загрузить видео
+          </Button>
+        </FormControl>
+        <Box mt={8}>
+          <FormLabel>Просмотр видео</FormLabel>
           <Box
-            as='video'
+            as="video"
             controls
             style={{ clear: "both" }}
             width="100%"
@@ -84,40 +105,79 @@ export default function VideoPrediction() {
             fallbackSrc="https://via.placeholder.com/500"
           />
         </Box>
-        <Box ml={8}>
-          <Box mb={2}>
-            <FormLabel>Previous Predictions</FormLabel>
+      </Box>
+      <Flex mt={{ base: 8, md: 0 }} ml={{ base: 0, md: 8 }} flexDirection="column">
+        <Box mt={8}>
+          <Box mb={2} display="flex" alignItems="right" justifyContent="space-between">
+            <FormLabel>Ваши видео</FormLabel>
+            <InputGroup ml={2} flex="1" maxW="md">
+              <Input
+                placeholder="Поиск"
+                value={searchTerm}
+                onChange={handleSearch}
+                pr="4.5rem"
+                borderRadius="md"
+              />
+              <InputRightElement width="4.5rem">
+                {searchTerm && (
+                  <CloseButton
+                    size="sm"
+                    onClick={() => setSearchTerm("")}
+                    _focus={{ boxShadow: "none" }}
+                  />
+                )}
+                <SearchIcon color="gray.400" />
+              </InputRightElement>
+            </InputGroup>
           </Box>
-          <UnorderedList>
-            {predictedImages.map((item) => (
-              <ListItem key={item} display="flex" alignItems="center">
-                <Box
-                  as='video'
+          <Box height="calc(100% - 46px)" overflowY="auto">
+            <UnorderedList>
+              {filteredVideos.map((item) => (
+                <ListItem
+                  key={item}
+                  display="flex"
+                  alignItems="center"
+                  _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+                  p={2}
+                  borderRadius="md"
+                  cursor="pointer"
+                >
+                  <Box
+                    as="video"
+                    src={`http://localhost:8000/video_stream/${item}`}
+                    boxSize="50px"
+                    objectFit="cover"
+                    borderRadius="md"
+                    mr={2}
+                  />
+                  <Box>{item}</Box>
+                  <Button
                   onClick={() => {
                     videoRef.current.src = `http://localhost:8000/video_stream/${item}`;
                   }}
-                  src={`http://localhost:8000/video_stream/${item}`}
-                  boxSize="50px"
-                  objectFit="cover"
-                  borderRadius="md"
-                  mr={2}
-                />
-                <Box>{item}</Box>
-                <Button
-                  onClick={() => {
-                    handleDeleteImage(item);
-                  }}
-                  leftIcon={<DeleteIcon />}
-                  colorScheme="red"
+                  leftIcon={<ViewIcon />}
                   variant="outline"
                   size="sm"
                   ml={2}
-                >
-                  Delete
-                </Button>
-              </ListItem>
-            ))}
-          </UnorderedList>
+                  >
+                  Просмотр
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleDeleteVideo(item);
+                    }}
+                    leftIcon={<DeleteIcon />}
+                    colorScheme="red"
+                    variant="outline"
+                    size="sm"
+                    ml={2}
+                  >
+                    Удалить
+                  </Button>
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </Box>
         </Box>
       </Flex>
     </Flex>
