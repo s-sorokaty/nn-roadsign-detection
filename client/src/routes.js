@@ -11,21 +11,21 @@ import {
 var dashRoutes = [
   {
     path: "/photo-prediction",
-    name: "Photo prediction",
+    name: "Распознавание на фотографии",
     icon: <HomeIcon color="inherit" />,
     component: PhotoPrediction,
     layout: "/admin",
   },
   {
     path: "/video-prediction",
-    name: "Video prediction",
+    name: "Распознавание на видео",
     icon: <StatsIcon color="inherit" />,
     component: VideoPrediction,
     layout: "/admin",
   },
   {
     path: "/realtime-prediction",
-    name: "Realtime prediction",
+    name: "Распознавание в реальном времени",
     icon: <CreditIcon color="inherit" />,
     component: RealtimePrediction,
     layout: "/admin",

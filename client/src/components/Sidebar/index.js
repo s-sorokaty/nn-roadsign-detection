@@ -48,7 +48,7 @@ function Sidebar(props) {
           borderRadius={sidebarRadius}
         >
           <SidebarContent routes={routes}
-        logoText={"ROAD SIGN DETECTION"}
+        logoText={"Распознавание дорожных знаков"}
         display="none"
         sidebarVariant={sidebarVariant}
         />

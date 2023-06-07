@@ -9,8 +9,12 @@ import {
   Box,
   UnorderedList,
   ListItem,
+  Select,
+  InputGroup,
+  InputRightElement,
+  CloseButton,
 } from "@chakra-ui/react";
-import {DeleteIcon} from "@chakra-ui/icons"
+import { DeleteIcon, ViewIcon, SearchIcon } from "@chakra-ui/icons";
 import React, { useState, useRef, useEffect } from "react";
 import api from "api/api";
 
@@ -18,6 +22,7 @@ export default function PhotoPrediction() {
   const iconBoxInside = useColorModeValue("white", "white");
   const [selectedFile, setSelectedFile] = useState("");
   const [predictedImages, setPredictedImages] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const imageRef = useRef();
 
@@ -54,44 +59,80 @@ export default function PhotoPrediction() {
     });
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredImages = predictedImages.filter((item) =>
+    item.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Flex
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      pt={{ base: "120px", md: "75px" }}
-      height="100vh" // Добавлено свойство height
-    >
-      <FormControl width="20%">
-        <FormLabel>Select an image for prediction</FormLabel>
-        <Input onChange={fileChangeHandler} type="file" accept=".jpeg, .jpg, .png" />
-        <Button onClick={apiRequest} mt={4} colorScheme="teal">
-          Get prediction
-        </Button>
-      </FormControl>
-      <Flex mt={8} alignItems="center">
-        <Box>
-          <FormLabel>Predicted Image</FormLabel>
+    <Flex minHeight="100vh" alignItems="stretch" justifyContent="center" paddingLeft="100">
+      <Box width="70%">
+        <Flex alignItems="center" paddingTop="100">
+          <FormControl width="40%">
+            <FormLabel>Выберите фотографию для распознавания</FormLabel>
+            <Input onChange={fileChangeHandler} type="file" accept=".jpeg, .jpg, .png" />
+            <FormLabel>Разрешение фотографии</FormLabel>
+            <Select>
+              <option value="option1">1280x720</option>
+              <option value="option2">1920x1080</option>
+              <option value="option3">640x480</option>
+            </Select>
+            <Button onClick={apiRequest} mt={4} colorScheme="teal">
+              Загрузить
+            </Button>
+          </FormControl>
+        </Flex>
+        <Box mt={8}>
+          <FormLabel>Просмотр фотографии</FormLabel>
           <Image
             style={{ clear: "both" }}
             width="100%"
             ref={imageRef}
             src=""
             alt="Predicted Image"
-            fallbackSrc="https://via.placeholder.com/500"
+            fallbackSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png"
           />
         </Box>
-        <Box ml={8}>
-          <Box mb={2}>
-            <FormLabel>Previous Predictions</FormLabel>
-          </Box>
+      </Box>
+      <Box width="30%" ml={8} position="relative" paddingTop="100px">
+        <Box mb={2} display="flex" alignItems="center">
+          <FormLabel>Загруженные фотографии</FormLabel>
+          <InputGroup ml={2} flex="1" maxW="md">
+            <Input
+              placeholder="Поиск"
+              value={searchTerm}
+              onChange={handleSearch}
+              pr="4.5rem"
+              borderRadius="md"
+            />
+            <InputRightElement width="4.5rem">
+              {searchTerm && (
+                <CloseButton
+                  size="sm"
+                  onClick={() => setSearchTerm("")}
+                  _focus={{ boxShadow: "none" }}
+                />
+              )}
+              <SearchIcon color="gray.400" />
+            </InputRightElement>
+          </InputGroup>
+        </Box>
+        <Box height="calc(100% - 46px)" overflowY="auto">
           <UnorderedList>
-            {predictedImages.map((item) => (
-              <ListItem key={item} display="flex" alignItems="center">
+            {filteredImages.map((item) => (
+              <ListItem
+                key={item}
+                display="flex"
+                alignItems="center"
+                _hover={{ bg: useColorModeValue("gray.100", "gray.800") }}
+                p={2}
+                borderRadius="md"
+                cursor="pointer"
+              >
                 <Image
-                  onClick={() => {
-                    imageRef.current.src = `http://localhost:8000/image_detection/${item}`;
-                  }}
                   src={`http://localhost:8000/image_detection/${item}`}
                   boxSize="50px"
                   objectFit="cover"
@@ -99,6 +140,17 @@ export default function PhotoPrediction() {
                   mr={2}
                 />
                 <Box>{item}</Box>
+                <Button
+                  onClick={() => {
+                    imageRef.current.src = `http://localhost:8000/image_detection/${item}`;
+                  }}
+                  leftIcon={<ViewIcon />}
+                  variant="outline"
+                  size="sm"
+                  ml={2}
+                >
+                  Открыть
+                </Button>
                 <Button
                   onClick={() => {
                     handleDeleteImage(item);
@@ -115,7 +167,7 @@ export default function PhotoPrediction() {
             ))}
           </UnorderedList>
         </Box>
-      </Flex>
+      </Box>
     </Flex>
   );
 }
