@@ -23,6 +23,7 @@ export default function PhotoPrediction() {
   const [selectedFile, setSelectedFile] = useState("");
   const [predictedImages, setPredictedImages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const imageRef = useRef();
 
@@ -31,6 +32,7 @@ export default function PhotoPrediction() {
   };
 
   const apiRequest = (e) => {
+    setIsLoading(true)
     const formData = new FormData();
     formData.append("image_file", selectedFile);
     api.image
@@ -39,6 +41,8 @@ export default function PhotoPrediction() {
         console.log(res.data);
         imageRef.current.src = `http://localhost:8000/image_detection/${selectedFile.name.split(".")[0]}`;
         api.image.list_images().then((res) => {
+          setIsLoading(false)
+
           setPredictedImages(res.data);
         });
       })
@@ -49,6 +53,7 @@ export default function PhotoPrediction() {
     api.image.list_images().then((res) => {
       setPredictedImages(res.data);
     });
+  
   }, []);
 
   const handleDeleteImage = (item) => {
@@ -80,7 +85,7 @@ export default function PhotoPrediction() {
               <option value="option2">1920x1080</option>
               <option value="option3">640x480</option>
             </Select>
-            <Button onClick={apiRequest} mt={4} colorScheme="teal">
+            <Button isLoading={isLoading} onClick={apiRequest} mt={4} colorScheme="teal">
               Загрузить фотографию
             </Button>
           </FormControl>

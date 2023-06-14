@@ -119,6 +119,18 @@
             <option value="1920x1080" selected>30</option>
         </select>
     </div>
+    <div>
+        <label for="use-video">Выбор камеры</label>
+        <select id="frame-rate">
+            <option value="1280x720">HD Webcam</option>
+            <option value="1920x1080" selected>OBS Virtual Camera</option>
+        </select>
+    </div>
+    <div class="option">
+        <input id="use-stun" type="checkbox"/>
+        <label for="use-stun">Включить запись</label>
+    </div>
+
     <div class="option" hidden>
         <input id="use-stun" type="checkbox"/>
         <label for="use-stun">Use STUN server</label>

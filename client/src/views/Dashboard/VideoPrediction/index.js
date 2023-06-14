@@ -24,6 +24,8 @@ export default function VideoPrediction() {
   const [selectedFile, setSelectedFile] = useState("");
   const [predictedVideos, setPredictedVideos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
+
 
   const videoRef = useRef();
 
@@ -32,6 +34,7 @@ export default function VideoPrediction() {
   };
 
   const apiRequest = (e) => {
+    setIsLoading(true)
     const formData = new FormData();
     formData.append("video_file", selectedFile);
     api.video
@@ -40,6 +43,7 @@ export default function VideoPrediction() {
         console.log(res.data);
         videoRef.current.src = `http://localhost:8000/video_stream/${selectedFile.name.split(".")[0]}`;
         api.video.list_videos().then((res) => {
+          setIsLoading(false)
           setPredictedVideos(res.data);
         });
       })
@@ -88,7 +92,7 @@ export default function VideoPrediction() {
               <option value="option3">20</option>
               <option value="option4">25</option>
           </Select>
-          <Button onClick={apiRequest} mt={4} colorScheme="teal">
+          <Button isLoading={isLoading} onClick={apiRequest} mt={4} colorScheme="teal">
             Загрузить видео
           </Button>
         </FormControl>
