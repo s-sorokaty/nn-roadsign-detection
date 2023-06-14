@@ -78,7 +78,7 @@ def get_video(filename: str):
 def get_video(filename: str):
     def iterfile(): 
         with open(f"{PREDICTION_DATA_PATH}/{filename}.webm", mode="rb") as file_like: 
-            yield from file_like 
+            yield file_like.read() 
     return responses.StreamingResponse(iterfile(), media_type="video/webm")
 
 @app.get("/list/video_detection/")
